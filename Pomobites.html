@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PomoBites</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka One', cursive;
+      margin: 0;
+      padding: 30px 20px;
+      background: linear-gradient(#FFEDE1,#E5CAFF);
+      color: #a51f1f;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      color: #b71c1c;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+    }
+
+    .main-layout {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .container {
+      background: linear-gradient(#FFEDE1,#E5CAFF);
+      border: 2px solid #FFB74D;
+      border-radius: 20px;
+      padding: 25px 15px;
+      width: 300px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 10px;
+      color: #d32f2f;
+    }
+
+    .timer-ring {
+      width: 175px;
+      height: 175px;
+      border-radius: 50%;
+      background:#ff8a65;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      padding: 10px;
+    }
+
+    .timer-circle {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg,#FFEDE1,#E5CAFF);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #212121;
+    }
+
+    #timer {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    #status-text {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 16px;
+      color: #b71c1c;
+      margin-top: 5px;
+    }
+
+    button.begin {
+      background-color: #D50000;
+      color: white;
+      padding: 10px 18px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    button.slice {
+      background-color: white;
+      color: #D50000;
+      border: 2px solid #D50000;
+      padding: 10px 18px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    button.break {
+      background-color: #FFD600;
+      color: #212121;
+      padding: 10px 18px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .pizza-section {
+      text-align: center;
+      max-width: 280px;
+    }
+
+    .pizza-img {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .pizza-slice {
+      font-size: 28px;
+      opacity: 0.2;
+      transition: opacity 0.3s ease-in-out;
+      margin: 0 5px;
+    }
+
+    .pizza-slice.active {
+      opacity: 1;
+    }
+
+    .session-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .box {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #D50000;
+      background-color: white;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+
+    .box.filled {
+      background-color: #D50000;
+    }
+    .quote-box {
+  margin-top: 20px;
+  margin-bottom : 30px;
+  padding: 15px 20px;
+  border-left: 5px solid #D50000;
+  background-color: #fff3e0;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  color: #5d4037;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  max-width: 280px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+  </style>
+</head>
+<body>
+  <audio id="ding-sound" src="timer-done.mp3" preload="auto"></audio>
+  <h1>🍕 POMOBITES</h1>
+
+  <div class="main-layout">
+    <!-- Left Panel - Timer -->
+    <div class="container">
+      <h2>🍕 Start Cooking! 👨‍🍳</h2>
+      <p>"Fire it up!" 🔥</p>
+      <div class="timer-ring">
+        <div class="timer-circle">
+          <div id="timer">25:00</div>
+          <div id="status-text">COOKING...</div>
+        </div>
+      </div>
+      <button class="begin" onclick="startTimer(1500, 'COOKING...')">Begin!!</button>
+      <button class="break" onclick="startTimer(300, 'SHORT BREAK')">Short Break</button>
+      <button class="slice" onclick="resetTimer()">Slice 🍕</button>
+    </div>
+
+    <!-- Right Panel - Pizza Progress -->
+    <div class="pizza-section">
+      <div class="quote-box" id="quote-box">
+  💡 "Stay focused, one slice at a time!" 
+</div>
+      <img src="C:\Users\shiri\Downloads\images.jpg" alt="Pizza" class="pizza-img" />
+      <div class="session-boxes">
+        <div class="box" id="box1"></div>
+        <div class="box" id="box2"></div>
+        <div class="box" id="box3"></div>
+        <div class="box" id="box4"></div>
+      </div>
+    </div>
+    
+
+  </div>
+
+  <script>
+    let duration = 1500;
+    let endTime = null;
+    let timerId = null;
+    let isRunning = false;
+    let sessionsCompleted = 0;
+
+    const timerDisplay = document.getElementById("timer");
+
+    function updateDisplay(secondsLeft) {
+      const minutes = Math.floor(secondsLeft / 60);
+      const seconds = secondsLeft % 60;
+      timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function startTimer(seconds = 1500, status = "COOKING...") {
+      if (isRunning) return;
+      duration = seconds;
+      document.getElementById("status-text").textContent = status;
+      isRunning = true;
+      endTime = Date.now() + duration * 1000;
+      tick();
+      timerId = setInterval(tick, 1000);
+    }
+
+    function tick() {
+      const secondsLeft = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+      updateDisplay(secondsLeft);
+      if (secondsLeft <= 0) {
+        clearInterval(timerId);
+        isRunning = false;
+        document.getElementById("ding-sound").play();
+        const status = document.getElementById("status-text").textContent;
+        if (status === "COOKING...") {
+          completePomodoro();
+        } else {
+          alert("Break's over! Let's get back to cooking! 🍕");
+        }
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerId);
+      isRunning = false;
+      duration = 1500;
+      updateDisplay(duration);
+      document.getElementById("status-text").textContent = "COOKING...";
+      alert("New slice is ready! 🍕");
+    }
+
+    function completePomodoro() {
+      sessionsCompleted++;
+      updatePizzaStatus();
+      if (sessionsCompleted === 4) {
+        alert("🎉 Pizza Complete! You nailed your goal today!");
+      }
+      updateMotivationQuote();
+
+    }
+
+    function updatePizzaStatus() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`box${i}`);
+        if (i <= sessionsCompleted) {
+          box.classList.add('filled');
+        }
+      }
+    }
+    const quotes = [
+  "💡 'Stay focused, one slice at a time!'",
+  "🔥 'Great work starts with one good session!'",
+  "🍕 'Pizza today, progress tomorrow!'",
+  "🎯 'You’re closer to the goal than you think!'",
+  "👏 'Keep it going — you’re doing amazing!'"
+];
+
+function updateMotivationQuote() {
+  const box = document.getElementById("quote-box");
+  const index = Math.floor(Math.random() * quotes.length);
+  box.textContent = quotes[index];
+}
+
+
+    updateDisplay(duration);
+  </script>
+</body>
+</html>
